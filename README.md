@@ -27,15 +27,16 @@ World Position: Various metrics on the vehicle position in relation to the track
 
 # Workflow:
 
-Brake and Throttle 
-Idea 1: We will take observations for any car position around turns 1 and 2, and find the average level of brake and throttle being used around Turn 1 and turn 2 by taking the average value of 5 points to the before and after (nearest the turning point).
+_Brake and Throttle_ 
 
-Idea 2: Study the trigger points for the braking point for turn 1 and the throttle point after turn 2. Before entering turn 1 the driver will apply brakes. There is no throttle being used between turns 1 and 2 since its a small distance, the driver only uses brakes and steering to control the car. He only uses throttle at any point after turn 2. We will identify these observations in the dataset. Plotting a graph of brake versus distance graph around turns 1 and 2 can help identify those trigger points. We believe that these trigger points will occur inside of the box at each turn mapped by 4 points. 
+_Idea 1:_ We will take observations for any car position around turns 1 and 2, and find the average level of brake and throttle being used around Turn 1 and turn 2 by taking the average value of 5 points to the before and after (nearest the turning point).
 
-Finish time 
+_Idea 2:_ Study the trigger points for the braking point for turn 1 and the throttle point after turn 2. Before entering turn 1 the driver will apply brakes. There is no throttle being used between turns 1 and 2 since its a small distance, the driver only uses brakes and steering to control the car. He only uses throttle at any point after turn 2. We will identify these observations in the dataset. Plotting a graph of brake versus distance graph around turns 1 and 2 can help identify those trigger points. We believe that these trigger points will occur inside of the box at each turn mapped by 4 points. 
+
+_Finish time_ 
 To determine the time at which a car crossed the ‘finish line,” we will use linear interpolation using algorithm 3. The finishing line is at x = 450m. This process will be repeated for each lap.
 
-On-track
+_On-track_
 The on-track value will be determined by using the algorithms 1, 2, and 4. All the car positions in the selected data set will be determined whether to be on-track or not, in order of that, the lap will be identified as valid or invalid. The selected data set here has been selected from the range of car position before the car approaches the turn 1 until it crosses the so-called finishing line, which is determined in algorithm 3. 
 
 
@@ -53,13 +54,13 @@ Car Position: The coordinates of the car on the track which enables the driver t
 
 With a draft of the ReadMe in place, the focus shifts to creating a data frame that satisfies the design stated. This involves a multistep process required for the creation of new variables such as track validity and structuring the data frame.
 
-Progress: 
+_Progress:_ 
 
 We have conducted an in-depth review of the datasets, exploring the available variables and their relevance to the final data product 
 Key variables to include in the final data product have been identified, and we’ve agreed on the creation of a new variable ‘on-track?’
 Discussions on algorithms and methods to apply in the development of the data product have been conducted, with ideas such as using local averaging, projection of a point onto a line, and linear interpolation considered 
 
-Next steps: 
+_Next steps:_ 
 
 We need to ensure that the variables in the 2024 dataset are consistent with those in the 2022 and 2023 datasets for consistency and integration all three years will be used to create the data product 
 A decision needs to be made on whether to proceed with idea 1 or idea 2 regarding handling the variables for braking, turning point and throttle 
@@ -69,7 +70,7 @@ A decision needs to be made on whether to proceed with idea 1 or idea 2 regardin
 
 The data product is intended to be used for future data modelling to provide a racer numerous scenarios to account for different situations including finding the optimal position, throttle, and brake to minimise the lap time, specifically for the completion of the first 2 turns. A simple analysis model that can be used to analyse data is the linear regression. Other than that, there are several useful models that can be used to analyse the data, which include Ridge and Lasso regression, GAM, K-nearest neighbour. 
 
-Support Info:
+_Support Info:_
 
 Contact Mamun Khan via email - z5361508@ad.unsw.edu.au
 
@@ -78,7 +79,7 @@ Contact Mamun Khan via email - z5361508@ad.unsw.edu.au
 Hoang Hung Le, Trishanti Karki, Mamun Khan, Zhaoxuan Liu and Honoka Kobayashi
 Dataset provided by Oracle
 
-How can others get involved? 
+_How can others get involved?_ 
 
 Others can get involved by joining the github repository, sharing feedback and contributing through pull requests. All forms of collaboration are welcome, including others reporting issues, suggesting improvements or contributing code. 
 
