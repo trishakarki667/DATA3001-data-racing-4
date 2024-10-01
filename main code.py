@@ -38,3 +38,11 @@ plt.title('F1 Racing Route with Apexes and Lap Line')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+
+# Create a new column 'lap_id' by combining 'SESSION_IDENTIFIER' and 'LAP_NUM'
+data['lap_id'] = data['SESSION_IDENTIFIER'].astype(str) + '_' + data['LAP_NUM'].astype(str)
+
+# Display the updated DataFrame
+print(data[['SESSION_IDENTIFIER', 'LAP_NUM', 'lap_id']])
