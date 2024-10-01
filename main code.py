@@ -1,10 +1,4 @@
 import pandas as pd 
-import matplotlib.pyplot as plt
-
-# Load the data from the CSV file you provided
-data_2022 = pd.read_csv("f1sim-data-2022.csv")  # Update with the correct file path
-
-# understanding the whole track
 
 # Load left-hand side and right-hand side data
 left_data = pd.read_csv("f1sim-ref-left.csv")
@@ -43,4 +37,4 @@ plt.title('F1 Racing Route with Apexes and Lap Line')
 # Show legend and plot
 plt.legend()
 plt.grid(True)
-plt.show() 
+plt.show()
