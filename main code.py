@@ -1,21 +1,15 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
-# Load the 2022 and 2023 data
+# Load the 2022 and 2023 data, and select only needed cols
 file_2022 = pd.read_csv('/Users/chris/Downloads/data-2/f1sim-data-2022.csv')
 file_2023 = pd.read_csv('/Users/chris/Downloads/data-2/f1sim-data-2023.csv')
-
-# Select only the needed columns from 2022 and 2023 data
 columns_to_keep = ['SESSION_IDENTIFIER', 'LAP_NUM', 'LAP_DISTANCE', 'CURRENT_LAP_TIME_MS', 
                    'THROTTLE', 'BRAKE', 'STEERING', 'WORLDPOSX', 'WORLDPOSY']
-
 total_data_filtered = pd.concat([file_2022[columns_to_keep], file_2023[columns_to_keep]])
 
-# Load the 2024 data file
+# Load the 2024 data file, rename the cols to match 22/23 cols names
 file_2024 = pd.read_csv('/Users/chris/Downloads/data-2/F124 Data Export UNSW.csv', low_memory = False)
-
-# Rename the columns in 2024 data to match 2022/2023 column names
 file_2024_renamed = file_2024.rename(columns = {
     'SESSION_GUID': 'SESSION_IDENTIFIER',
     'M_CURRENTLAPNUM': 'LAP_NUM',
@@ -28,27 +22,21 @@ file_2024_renamed = file_2024.rename(columns = {
     'M_WORLDPOSITIONY_1': 'WORLDPOSY'
 })
 
-# Select only the required columns from the 2024 data
+# Select required cols from the 2024 data and concat to the existing 22/23
 file_2024_filtered = file_2024_renamed[columns_to_keep]
-
-# Concatenate the 2024 data with the existing total_data_filtered
 total_data_filtered = pd.concat([total_data_filtered, file_2024_filtered], ignore_index = True)
 
 # Processing data initially
-# Specify the columns that should be numeric
+# Check numeric values for selected cols and drop NaN values
 numeric_columns = ['LAP_NUM', 'LAP_DISTANCE', 'CURRENT_LAP_TIME_MS', 'THROTTLE', 'BRAKE', 'STEERING', 'WORLDPOSX', 'WORLDPOSY']
-
-# Convert only the numeric columns to numeric, coercing errors, while leaving 'SESSION_IDENTIFIER' intact
 total_data_filtered[numeric_columns] = total_data_filtered[numeric_columns].apply(pd.to_numeric, errors = 'coerce')
-
-# Drop rows where any of the numeric columns have NaN values
 total_data_filtered = total_data_filtered.dropna(subset = numeric_columns)
 
-# Filter throttle and brake values between 0 and 1
+# Check for throttle and brake between 0 and 1
 total_data_filtered = total_data_filtered[(total_data_filtered['THROTTLE'] >= 0) & (total_data_filtered['THROTTLE'] <= 1)]
 total_data_filtered = total_data_filtered[(total_data_filtered['BRAKE'] >= 0) & (total_data_filtered['BRAKE'] <= 1)]
 
-# Make a new variable LAP_ID
+# Create LAP_ID for group and subset data
 total_data_filtered['LAP_ID'] = total_data_filtered['SESSION_IDENTIFIER'].astype(str) + '_' + total_data_filtered['LAP_NUM'].astype(str)
 
 # Process left and rigth data
@@ -61,19 +49,21 @@ filtered_left = data_left[(data_left['WORLDPOSX'] >= 0) & (data_left['WORLDPOSX'
 filtered_right = data_right[(data_right['WORLDPOSX'] >= 0) & (data_right['WORLDPOSX'] <= 600) & 
                             (data_right['WORLDPOSY'] >= -300) & (data_right['WORLDPOSY'] <= 620)]
 
+######################################
+
 # Function to filter out subset of each lap data
 def filtered_sorted_data_subset(data):
     filtered_data = data[(data['WORLDPOSX'] >= 100) & (data['WORLDPOSX'] <= 475) &
-                               (data['WORLDPOSY'] >= -50) & (data['WORLDPOSY'] <= 460)]
-    filtered_sorted_data = filtered_data.sort_values(by = 'WORLDPOSY', ascending = False) 
+                         (data['WORLDPOSY'] >= -50) & (data['WORLDPOSY'] <= 460) &
+                         (data['LAP_DISTANCE'] >= 0) & (data['LAP_DISTANCE'] <= 1000)] 
+    filtered_sorted_data = filtered_data.sort_values(by = 'LAP_DISTANCE', ascending = True)
     return filtered_sorted_data
 
 # Function to get data for car position using interpolation method
 def interpolate_data_info(filtered_sorted_data, lap_distance_target):
-    # Check if there's an exact match for the target lap distance
+    # Check exact match for the target lap distance, return value if exist
     exact_match = filtered_sorted_data[filtered_sorted_data['LAP_DISTANCE'] == lap_distance_target]
     if not exact_match.empty:
-        # If an exact match exists, return the corresponding values directly
         exact_point = exact_match.iloc[0]
         return (exact_point['CURRENT_LAP_TIME_MS'], 
                 exact_point['BRAKE'], 
@@ -85,7 +75,6 @@ def interpolate_data_info(filtered_sorted_data, lap_distance_target):
     # Find the two rows that are closest to the target lap distance (P_t and P_t+1)
     filtered_before = filtered_sorted_data[filtered_sorted_data['LAP_DISTANCE'] <= lap_distance_target]
     filtered_after = filtered_sorted_data[filtered_sorted_data['LAP_DISTANCE'] > lap_distance_target]
-
     if filtered_before.empty or filtered_after.empty:
         return np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     
@@ -95,7 +84,6 @@ def interpolate_data_info(filtered_sorted_data, lap_distance_target):
     # Extract the pos for the P_t and P_t+1
     Pt_pos = np.array([Pt['WORLDPOSX'], Pt['WORLDPOSY']])
     Pt1_pos = np.array([Pt1['WORLDPOSX'], Pt1['WORLDPOSY']])
-
     distance_Pt_Pt1 = np.linalg.norm(Pt1_pos - Pt_pos)
 
     # Calculate c as per the interpolation algorithm
@@ -113,13 +101,14 @@ def interpolate_data_info(filtered_sorted_data, lap_distance_target):
     
     return Te, Be, The, Se, Xe, Ye
 
-# Function to count the distance between two points
+######################################
+
+# Function to calculate the distance between two points
 def distance(x1, y1, x2, y2):
     return np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
 # Function to find two closest point to a threshold point
 def find_closest_points(x_threshold, y_threshold, filtered_left, filtered_right):
-    # Create copies to avoid modifying the original DataFrames
     filtered_left_copy = filtered_left.copy()
     filtered_right_copy = filtered_right.copy()
 
@@ -129,9 +118,9 @@ def find_closest_points(x_threshold, y_threshold, filtered_left, filtered_right)
     )
 
     # Sort by distance to get the two closest points L1 and L2
-    filtered_left_copy = filtered_left_copy.sort_values(by='distance_to_threshold')
-    L1 = filtered_left_copy.iloc[0]  # Closest point
-    L2 = filtered_left_copy.iloc[1]  # Second closest point
+    filtered_left_copy = filtered_left_copy.sort_values(by = 'distance_to_threshold')
+    L1 = filtered_left_copy.iloc[0]  
+    L2 = filtered_left_copy.iloc[1]  
 
     # Calculate the distance from each point in filtered_right to the threshold point
     filtered_right_copy['distance_to_threshold'] = filtered_right_copy.apply(
@@ -140,8 +129,8 @@ def find_closest_points(x_threshold, y_threshold, filtered_left, filtered_right)
 
     # Sort by distance to get the two closest points R1 and R2
     filtered_right_copy = filtered_right_copy.sort_values(by='distance_to_threshold')
-    R1 = filtered_right_copy.iloc[0]  # Closest point
-    R2 = filtered_right_copy.iloc[1]  # Second closest point
+    R1 = filtered_right_copy.iloc[0]  
+    R2 = filtered_right_copy.iloc[1]  
 
     return L1, L2, R1, R2
 
@@ -150,20 +139,17 @@ def check_track_position(x_P, y_P, filtered_left, filtered_right):
     # Recalculate L1, L2, R1, R2 for the current threshold point
     L1, L2, R1, R2 = find_closest_points(x_P, y_P, filtered_left, filtered_right)
 
-    # Denominator for c_L and c_R calculations
+    # Avoid division by zero in c_L and c_R
     denom_L = (L2['WORLDPOSX'] - L1['WORLDPOSX'])**2 + (L2['WORLDPOSY'] - L1['WORLDPOSY'])**2
     denom_R = (R2['WORLDPOSX'] - R1['WORLDPOSX'])**2 + (R2['WORLDPOSY'] - R1['WORLDPOSY'])**2
-
-    # Avoid division by zero in c_L and c_R
     if denom_L != 0:
         c_L = ((x_P - L1['WORLDPOSX']) * (L2['WORLDPOSX'] - L1['WORLDPOSX']) + (y_P - L1['WORLDPOSY']) * (L2['WORLDPOSY'] - L1['WORLDPOSY'])) / denom_L
     else:
-        c_L = 0  # Set c_L to 0 if division by zero occurs
-
+        c_L = 0  
     if denom_R != 0:
         c_R = ((x_P - R1['WORLDPOSX']) * (R2['WORLDPOSX'] - R1['WORLDPOSX']) + (y_P - R1['WORLDPOSY']) * (R2['WORLDPOSY'] - R1['WORLDPOSY'])) / denom_R
     else:
-        c_R = 0  # Set c_R to 0 if division by zero occurs
+        c_R = 0  
 
     # Calculate the projected points L_p and R_p
     L_p_x = L1['WORLDPOSX'] + c_L * (L2['WORLDPOSX'] - L1['WORLDPOSX'])
@@ -171,7 +157,7 @@ def check_track_position(x_P, y_P, filtered_left, filtered_right):
     R_p_x = R1['WORLDPOSX'] + c_R * (R2['WORLDPOSX'] - R1['WORLDPOSX'])
     R_p_y = R1['WORLDPOSY'] + c_R * (R2['WORLDPOSY'] - R1['WORLDPOSY'])
 
-    # Calculate the distances from car position to left and right projected points
+    # Calculate the distances from car pos to L_p and R_p
     distance_L = np.sqrt((x_P - L_p_x)**2 + (y_P - L_p_y)**2)
     distance_R = np.sqrt((x_P - R_p_x)**2 + (y_P - R_p_y)**2)
     
@@ -188,12 +174,14 @@ def check_track_position(x_P, y_P, filtered_left, filtered_right):
     
     return distance_L, distance_R, pos_valid
 
+######################################
+
 # Function to get the lap data
 def process_lap_data(lap_data, lap_distance, filtered_left, filtered_right):
     # Interpolate data for the given lap distance
     Te, Be, The, Se, Xe, Ye = interpolate_data_info(lap_data, lap_distance)
     
-    # Check track position using the interpolated X and Y
+    # Calculate left and right distance
     if not np.isnan(Xe) and not np.isnan(Ye):
         left_distance, right_distance, _ = check_track_position(Xe, Ye, filtered_left, filtered_right)
     else:
@@ -206,17 +194,16 @@ def validate_track_positions(filtered_sorted_data, filtered_left, filtered_right
     for _, row in filtered_sorted_data.iterrows():
         x_P, y_P = row['WORLDPOSX'], row['WORLDPOSY']
         _, _, pos_valid = check_track_position(x_P, y_P, filtered_left, filtered_right)
-        
-        # If any position is off-track, mark as invalid
         if pos_valid != "on-track":
             return "invalid"  
     return "valid" 
 
+######################################
+
 # Main loop to produce the final data product
 lap_results = []
-
 for lap_id, lap_data in total_data_filtered.groupby('LAP_ID'):
-    # Apply filtering and sorting to each subset
+    # Filtering and sorting to get data subset
     filtered_sorted_data = filtered_sorted_data_subset(lap_data)
     
     # Process lap data for lap distances 295, 386, 435, 494, and 575
@@ -229,7 +216,7 @@ for lap_id, lap_data in total_data_filtered.groupby('LAP_ID'):
     # Process finishing time at lap distance 600
     Te_600, _, _, _, _, _ = process_lap_data(filtered_sorted_data, 600, filtered_left, filtered_right)
     
-    # Validate if all car positions are on-track or not
+    # Validate track valid or not
     track_valid = validate_track_positions(filtered_sorted_data, filtered_left, filtered_right)
     
     # Store the results 
@@ -262,14 +249,13 @@ for lap_id, lap_data in total_data_filtered.groupby('LAP_ID'):
         'STEERING_AT_575': Se_575,
         'LEFT_DISTANCE_AT_575': left_distance_575,
         'RIGHT_DISTANCE_AT_575': right_distance_575,
-    }
-    
+    }    
     lap_results.append(lap_result)
 
 data_product_final = pd.DataFrame(lap_results)
 
 # Remove rows where 'FINISHING_TIME_AT_600' is NaN & replace remaining NaN values with 'NaN'
-data_product_final_cleaned = data_product_final.dropna(subset=['FINISHING_TIME_AT_600'])
+data_product_final_cleaned = data_product_final.dropna(subset = ['FINISHING_TIME_AT_600'])
 data_product_final_cleaned = data_product_final_cleaned.fillna('NaN')
 
 # Process and print out the csv file
