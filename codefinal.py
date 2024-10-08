@@ -99,3 +99,75 @@ def interpolate_data_info(filtered_sorted_data, lap_distance_target):
     
     return Te, Be, The, Se, Xe, Ye
 
+
+# Function to calculate the distance between two points
+def distance(x1, y1, x2, y2):
+    return np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+
+# Function to find two closest point to a threshold point
+def find_closest_points(x_threshold, y_threshold, filtered_left, filtered_right):
+    filtered_left_copy = filtered_left.copy()
+    filtered_right_copy = filtered_right.copy()
+
+    # Calculate the distance from each point in filtered_left to the threshold point
+    filtered_left_copy['distance_to_threshold'] = filtered_left_copy.apply(
+        lambda row: distance(row['WORLDPOSX'], row['WORLDPOSY'], x_threshold, y_threshold), axis=1
+    )
+
+    # Sort by distance to get the two closest points L1 and L2
+    filtered_left_copy = filtered_left_copy.sort_values(by = 'distance_to_threshold')
+    L1 = filtered_left_copy.iloc[0]  
+    L2 = filtered_left_copy.iloc[1]  
+
+    # Calculate the distance from each point in filtered_right to the threshold point
+    filtered_right_copy['distance_to_threshold'] = filtered_right_copy.apply(
+        lambda row: distance(row['WORLDPOSX'], row['WORLDPOSY'], x_threshold, y_threshold), axis=1
+    )
+
+    # Sort by distance to get the two closest points R1 and R2
+    filtered_right_copy = filtered_right_copy.sort_values(by='distance_to_threshold')
+    R1 = filtered_right_copy.iloc[0]  
+    R2 = filtered_right_copy.iloc[1]  
+
+    return L1, L2, R1, R2
+
+# Function to find whether a car pos is on-track or not
+def check_track_position(x_P, y_P, filtered_left, filtered_right):
+    # Recalculate L1, L2, R1, R2 for the current threshold point
+    L1, L2, R1, R2 = find_closest_points(x_P, y_P, filtered_left, filtered_right)
+
+    # Avoid division by zero in c_L and c_R
+    denom_L = (L2['WORLDPOSX'] - L1['WORLDPOSX'])**2 + (L2['WORLDPOSY'] - L1['WORLDPOSY'])**2
+    denom_R = (R2['WORLDPOSX'] - R1['WORLDPOSX'])**2 + (R2['WORLDPOSY'] - R1['WORLDPOSY'])**2
+    if denom_L != 0:
+        c_L = ((x_P - L1['WORLDPOSX']) * (L2['WORLDPOSX'] - L1['WORLDPOSX']) + (y_P - L1['WORLDPOSY']) * (L2['WORLDPOSY'] - L1['WORLDPOSY'])) / denom_L
+    else:
+        c_L = 0  
+    if denom_R != 0:
+        c_R = ((x_P - R1['WORLDPOSX']) * (R2['WORLDPOSX'] - R1['WORLDPOSX']) + (y_P - R1['WORLDPOSY']) * (R2['WORLDPOSY'] - R1['WORLDPOSY'])) / denom_R
+    else:
+        c_R = 0  
+
+    # Calculate the projected points L_p and R_p
+    L_p_x = L1['WORLDPOSX'] + c_L * (L2['WORLDPOSX'] - L1['WORLDPOSX'])
+    L_p_y = L1['WORLDPOSY'] + c_L * (L2['WORLDPOSY'] - L1['WORLDPOSY'])
+    R_p_x = R1['WORLDPOSX'] + c_R * (R2['WORLDPOSX'] - R1['WORLDPOSX'])
+    R_p_y = R1['WORLDPOSY'] + c_R * (R2['WORLDPOSY'] - R1['WORLDPOSY'])
+
+    # Calculate the distances from car pos to L_p and R_p
+    distance_L = np.sqrt((x_P - L_p_x)**2 + (y_P - L_p_y)**2)
+    distance_R = np.sqrt((x_P - R_p_x)**2 + (y_P - R_p_y)**2)
+    
+    # Calculate the track width plus buffer = 1
+    track_width = np.sqrt((L_p_x - R_p_x)**2 + (L_p_y - R_p_y)**2) + 1 
+
+    # Check if the car is on-track, left-off, or right-off
+    if max(distance_L, distance_R) <= track_width:
+        pos_valid = "on-track"
+    elif distance_R > track_width:
+        pos_valid = "right-off"
+    elif distance_L > track_width:
+        pos_valid = "left-off"
+    
+    return distance_L, distance_R, pos_valid
+
