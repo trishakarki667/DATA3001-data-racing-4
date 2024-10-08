@@ -98,3 +98,4 @@ def interpolate_data_info(filtered_sorted_data, lap_distance_target):
     Ye = (1 - c) * Pt['WORLDPOSY'] + c * Pt1['WORLDPOSY']
     
     return Te, Be, The, Se, Xe, Ye
+
