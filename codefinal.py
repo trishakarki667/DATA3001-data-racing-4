@@ -171,3 +171,26 @@ def check_track_position(x_P, y_P, filtered_left, filtered_right):
     
     return distance_L, distance_R, pos_valid
 
+def process_lap_data(lap_data, lap_distance, filtered_left, filtered_right):
+    # Interpolate data for the given lap distance
+    Te, Be, The, Se, Xe, Ye = interpolate_data_info(lap_data, lap_distance)
+    
+    # Check track position using the interpolated X and Y
+    if not np.isnan(Xe) and not np.isnan(Ye):
+        left_distance, right_distance, _ = check_track_position(Xe, Ye, filtered_left, filtered_right)
+    else:
+        left_distance, right_distance = np.nan, np.nan
+
+    return Te, Be, The, Se, left_distance, right_distance
+
+def validate_track_positions(filtered_sorted_data, filtered_left, filtered_right):
+    for _, row in filtered_sorted_data.iterrows():
+        x_P, y_P = row['WORLDPOSX'], row['WORLDPOSY']
+        _, _, pos_valid = check_track_position(x_P, y_P, filtered_left, filtered_right)
+        
+        # If any position is off-track, mark as invalid
+        if pos_valid != "on-track":
+            return "invalid"  
+    return "valid" 
+
+lap_results = []
