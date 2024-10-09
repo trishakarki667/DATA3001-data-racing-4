@@ -193,4 +193,64 @@ def validate_track_positions(filtered_sorted_data, filtered_left, filtered_right
             return "invalid"  
     return "valid" 
 
+# Main loop to produce the final data product
 lap_results = []
+for lap_id, lap_data in total_data_filtered.groupby('LAP_ID'):
+    # Filtering and sorting to get data subset
+    filtered_sorted_data = filtered_sorted_data_subset(lap_data)
+    
+    # Process lap data for lap distances 295, 386, 435, 494, and 575
+    Te_295, Be_295, The_295, Se_295, left_distance_295, right_distance_295 = process_lap_data(filtered_sorted_data, 295, filtered_left, filtered_right)
+    Te_386, Be_386, The_386, Se_386, left_distance_386, right_distance_386 = process_lap_data(filtered_sorted_data, 386, filtered_left, filtered_right)
+    Te_435, Be_435, The_435, Se_435, left_distance_435, right_distance_435 = process_lap_data(filtered_sorted_data, 435, filtered_left, filtered_right)
+    Te_494, Be_494, The_494, Se_494, left_distance_494, right_distance_494 = process_lap_data(filtered_sorted_data, 494, filtered_left, filtered_right)
+    Te_575, Be_575, The_575, Se_575, left_distance_575, right_distance_575 = process_lap_data(filtered_sorted_data, 575, filtered_left, filtered_right)
+    
+    # Process finishing time at lap distance 600
+    Te_600, _, _, _, _, _ = process_lap_data(filtered_sorted_data, 600, filtered_left, filtered_right)
+    
+    # Validate track valid or not
+    track_valid = validate_track_positions(filtered_sorted_data, filtered_left, filtered_right)
+    
+    # Store the results 
+    lap_result = {
+        'LAP_ID': lap_id,
+        'FINISHING_TIME_AT_600': Te_600,
+        'TRACK_VALID': track_valid,
+        'BRAKE_AT_295': Be_295,
+        'THROTTLE_AT_295': The_295,
+        'STEERING_AT_295': Se_295,
+        'LEFT_DISTANCE_AT_295': left_distance_295,
+        'RIGHT_DISTANCE_AT_295': right_distance_295,
+        'BRAKE_AT_386': Be_386,
+        'THROTTLE_AT_386': The_386,
+        'STEERING_AT_386': Se_386,
+        'LEFT_DISTANCE_AT_386': left_distance_386,
+        'RIGHT_DISTANCE_AT_386': right_distance_386,
+        'BRAKE_AT_435': Be_435,
+        'THROTTLE_AT_435': The_435,
+        'STEERING_AT_435': Se_435,
+        'LEFT_DISTANCE_AT_435': left_distance_435,
+        'RIGHT_DISTANCE_AT_435': right_distance_435,
+        'BRAKE_AT_494': Be_494,
+        'THROTTLE_AT_494': The_494,
+        'STEERING_AT_494': Se_494,
+        'LEFT_DISTANCE_AT_494': left_distance_494,
+        'RIGHT_DISTANCE_AT_494': right_distance_494,
+        'BRAKE_AT_575': Be_575,
+        'THROTTLE_AT_575': The_575,
+        'STEERING_AT_575': Se_575,
+        'LEFT_DISTANCE_AT_575': left_distance_575,
+        'RIGHT_DISTANCE_AT_575': right_distance_575,
+    }    
+    lap_results.append(lap_result)
+
+data_product_final = pd.DataFrame(lap_results)
+
+# Remove rows where 'FINISHING_TIME_AT_600' is NaN & replace remaining NaN values with 'NaN'
+data_product_final_cleaned = data_product_final.dropna(subset = ['FINISHING_TIME_AT_600'])
+data_product_final_cleaned = data_product_final_cleaned.fillna('NaN')
+
+# Process and print out the csv file
+data_product_final_cleaned_file_path = '/Users/chris/Downloads/data-2/data_product_final_3.csv'
+data_product_final_cleaned.to_csv(data_product_final_cleaned_file_path, index = False)
