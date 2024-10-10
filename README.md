@@ -23,7 +23,7 @@ The data sources used to construct the data product are datasets provided by Ora
 The variables included in the 2022 and 2023 datasets will be used to construct data product are shown below.
 
 | Variable       | Description | 
-|:-----------:|----:|
+|:-----------|:----|
 | SESSION_IDENTIFIER   |  Unique identifier for the session | 
 | LAP_NUM |  Current lap number |
 | LAP_DISTANCE  |  Distance vehicle is around current lap in metre | 
@@ -36,7 +36,7 @@ The variables included in the 2022 and 2023 datasets will be used to construct d
 Additional variables that were included in the 2024 are shown below along with their corresponding variable names:
 
 | Variable       | Corresponding Variable | 
-|:-----------:|----:|
+|:-----------|:----|
 | SESSION_GUID   |  SESSION_IDENTIFIER | 
 | M_CURRENTLAPNUM |  LAP_NUM |
 | M_LAPDISTANCE_1  |  LAP_DISTANCE | 
