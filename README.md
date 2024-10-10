@@ -49,20 +49,9 @@ Additional variables that were included in the 2024 are shown below along with t
 
 
 # Workflow:
+&nbsp;&nbsp;&nbsp;&nbsp;__1. Setting up our track of interest__ 
+&nbsp;&nbsp;&nbsp;&nbsp;The first step is to identify critical points within the lap, from the start of Turn 1, through Turn 2, to the finishing line. By plotting the first lap of the 2023 data, using the left and right side distances and corner coordinates, we identified five key points at 295m, 386m, 435m, 494m, 575m, and 600m (the new finishing line). These points are just before the boundary and apex of Turns 1 and 2, with 600m (a point between Turns 2 and 3). These points are crucial for modelling, as they capture significant insights like brake, throttle, steering and distances to the track edges. 
 
-_Brake and Throttle_ 
-
-  -_Idea 1:_ We will take observations for any car position around turns 1 and 2, and find the average level of brake and throttle being used around Turn 1 and turn 2 by taking the average value of 5 points to the before and after (nearest the turning point).
-
-  -_Idea 2:_ Study the trigger points for the braking point for turn 1 and the throttle point after turn 2. Before entering turn 1 the driver will apply brakes. There is no throttle being used between turns 1 and 2 since its a small distance, the driver only uses brakes and steering to control the car. He only uses throttle at any point after turn 2. We will identify these observations in the dataset. Plotting a graph of brake versus distance graph around turns 1 and 2 can help identify those trigger points. We believe that these trigger points will occur inside of the box at each turn mapped by 4 points. 
-
-_Finish time_ 
-
-To determine the time at which a car crossed the ‘finish line,” we will use linear interpolation using algorithm 3. The finishing line is at x = 450m. This process will be repeated for each lap.
-
-_On-track_
-
-The on-track value will be determined by using the algorithms 1, 2, and 4. All the car positions in the selected data set will be determined whether to be on-track or not, in order of that, the lap will be identified as valid or invalid. The selected data set here has been selected from the range of car position before the car approaches the turn 1 until it crosses the so-called finishing line, which is determined in algorithm 3. 
 
 
 # Data description:
