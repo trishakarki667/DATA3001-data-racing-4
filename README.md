@@ -122,6 +122,60 @@ model = sm.OLS(y, X).fit()
 # Observe the summary of the model
 summary = model.summary()
 print(summary)
+```
+```markdown
+                              OLS Regression Results                             
+=================================================================================
+Dep. Variable:     FINISHING_TIME_AT_600   R-squared:                       0.358
+Model:                               OLS   Adj. R-squared:                  0.345
+Method:                    Least Squares   F-statistic:                     27.22
+Date:                   Thu, 10 Oct 2024   Prob (F-statistic):           2.25e-99
+Time:                           18:32:54   Log-Likelihood:                -12190.
+No. Observations:                   1248   AIC:                         2.443e+04
+Df Residuals:                       1222   BIC:                         2.457e+04
+Df Model:                             25                                         
+Covariance Type:               nonrobust                                         
+=========================================================================================
+                            coef    std err          t      P>|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------------
+const                  2.261e+04   1393.457     16.224      0.000    1.99e+04    2.53e+04
+BRAKE_AT_295          -1655.1225    481.792     -3.435      0.001   -2600.353    -709.892
+THROTTLE_AT_295         500.6824    752.035      0.666      0.506    -974.740    1976.105
+STEERING_AT_295         330.4908   1916.553      0.172      0.863   -3429.609    4090.590
+LEFT_DISTANCE_AT_295    -41.0909     34.379     -1.195      0.232    -108.540      26.358
+RIGHT_DISTANCE_AT_295  -131.3528     42.342     -3.102      0.002    -214.424     -48.282
+BRAKE_AT_386            152.8279    559.447      0.273      0.785    -944.755    1250.411
+THROTTLE_AT_386          73.9793    477.957      0.155      0.877    -863.728    1011.687
+STEERING_AT_386        -712.5994    613.457     -1.162      0.246   -1916.145     490.946
+LEFT_DISTANCE_AT_386   -233.8839     49.026     -4.771      0.000    -330.069    -137.699
+RIGHT_DISTANCE_AT_386   279.0048     44.885      6.216      0.000     190.945     367.065
+BRAKE_AT_435           1995.5955   1442.364      1.384      0.167    -834.189    4825.380
+THROTTLE_AT_435         926.3384    539.157      1.718      0.086    -131.437    1984.114
+STEERING_AT_435       -3120.3879    704.265     -4.431      0.000   -4502.091   -1738.685
+LEFT_DISTANCE_AT_435    302.0748     46.721      6.466      0.000     210.413     393.736
+RIGHT_DISTANCE_AT_435   -49.4749     48.596     -1.018      0.309    -144.816      45.866
+BRAKE_AT_494           2617.1758   2090.370      1.252      0.211   -1483.936    6718.288
+THROTTLE_AT_494       -3365.1653    660.208     -5.097      0.000   -4660.432   -2069.899
+STEERING_AT_494        -890.6069    826.856     -1.077      0.282   -2512.822     731.608
+LEFT_DISTANCE_AT_494    114.2674     44.036      2.595      0.010      27.872     200.663
+RIGHT_DISTANCE_AT_494  -136.2133     42.239     -3.225      0.001    -219.083     -53.343
+BRAKE_AT_575           4031.4445   5057.082      0.797      0.425   -5890.080     1.4e+04
+THROTTLE_AT_575       -2949.1332    671.250     -4.393      0.000   -4266.064   -1632.203
+STEERING_AT_575        1445.2232    920.385      1.570      0.117    -360.488    3250.934
+LEFT_DISTANCE_AT_575    -38.8733     60.954     -0.638      0.524    -158.460      80.713
+RIGHT_DISTANCE_AT_575  -146.8068     50.411     -2.912      0.004    -245.709     -47.904
+==============================================================================
+Omnibus:                     1298.242   Durbin-Watson:                   1.914
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            98684.339
+Skew:                           4.898   Prob(JB):                         0.00
+Kurtosis:                      45.448   Cond. No.                     1.32e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.32e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+```
 
 _Support Info:_
 
