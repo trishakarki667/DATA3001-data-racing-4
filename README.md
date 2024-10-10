@@ -53,7 +53,7 @@ Below is the plot of critical points against the track path and turning points f
 ![Plot of critical points against the track path and turn points](critical_points_plot.png)
 
 __2. Combining 3 datasets__  
-&nbsp;&nbsp;&nbsp;&nbsp;To ensure consistency and make the data easier to process, we first merged the 2022 and 2023 data files, as they shared the same variables and format. After merging, we kept only the variables necessary for modelling, which is described in the data description. Next, we integrated the 2024 data file, which had a different format and variable names. This required renaming and aligning the variables with those from the combined 2022 and 2023 dataset.
+To ensure consistency and make the data easier to process, we first merged the 2022 and 2023 data files, as they shared the same variables and format. After merging, we kept only the variables necessary for modelling, which is described in the data description. Next, we integrated the 2024 data file, which had a different format and variable names. This required renaming and aligning the variables with those from the combined 2022 and 2023 dataset.
 
 __3. Initial data cleaning__  
 Once the data was merged, we performed initial data cleaning after taking all the columns, and dropped NaN values. The criteria for identifying if it is NaN is if the value is missing for columns where that value must be shown in numerical type, or the value for variable not is numerical type, such as string value. We also checked for any inconsistencies in the throttle and brake values as it needs to be between 0.00 to 1.00
