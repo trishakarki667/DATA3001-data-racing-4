@@ -1,21 +1,21 @@
-## Project Title: F1 Data Product
+# Project Title: F1 Data Product
 
-# Project Description:
+## Project Description:
 
-# Main Objective 
+## Main Objective 
 
 To develop a comprehensive dataset using data collected in 2022, 2023 and 2024 from an F1 simulation by Oracle. This product will identify key variables that should be optimised to achieve an ideal lap time, specifically focusing on turns 1 and 2 on the race track.
 
-# Significance  
+## Significance  
 
 F1 racing is becoming increasingly data-centric, with teams relying on extensive data to make strategic decisions and improve their performance. This data product will serve as a foundation for further modelling by identifying crucial factors such as braking point, turning points, and car positioning to maximise exit speed from turn 2. By leveraging these insights, teams can make informed decisions, giving their drivers a competitive edge on the track.
 
-# Relation to  previous work 
+## Relation to  previous work 
 
 In recent years, data analysis has become central to F1 racing, with teams leveraging Monte Carlo simulations and real-time data to improve their strategies for optimal performance. Previous efforts, particularly by teams like Oracle Red Bull Racing, have focused on collecting data related to variables such as speed, throttle, and steering inputs. Drivers like Max Verstappen use these advanced simulations to identify key factors that influence lap times and make adjustments accordingly.  
 This project builds on Oracle’s existing data by introducing new variables and manipulating data to ultimately create a data framework. By expanding the dataset in this way, we aim to provide drivers with more detailed insights to make better-informed decisions and ultimately improve lap times. 
 
-# Sources:
+## Sources:
 
 The data sources used to construct the data product are datasets provided by Oracle which contain records of variables recorded in an F1 simulation during the years 2022 - 2024. The data itself was produced via the EA F1 simulator in which various drivers raced around the track while information on relevant variables was recorded.  
 The variables included in the 2022 and 2023 datasets will be used to construct data product are shown below.
@@ -46,7 +46,7 @@ Additional variables that were included in the 2024 are shown below along with t
 | STEERING  |  WORLDPOS X/Y |
 
 
-# Workflow:
+## Workflow:
 __1. Setting up our track of interest__  
 The first step is to identify critical points within the lap, from the start of Turn 1, through Turn 2, to the finishing line. By plotting the first lap of the 2023 data, using the left and right side distances and corner coordinates, we identified five key points at 295m, 386m, 435m, 494m, 575m, and 600m (the new finishing line). These points are just before the boundary and apex of Turns 1 and 2, with 600m (a point between Turns 2 and 3). These points are crucial for modelling, as they capture significant insights like brake, throttle, steering and distances to the track edges.  
 Below is the plot of critical points against the track path and turning points for better visualisation.  
@@ -70,7 +70,7 @@ Since the lap distance at 600m is treated as a new finishing line, the finishing
 __7. Is the lap valid?__  
 We created a new variable, ‘TRACK_VALID’, which determines whether a lap is valid or invalid. A lap is considered valid if the car stays on track throughout. To check this, we first find the two nearest points on both the left and right edges of the track for each car position. Then, we calculate the distance from the car to both edges. If the car’s distance from either side is within the width of the track (plus a 1 metre buffer for the car’s width), the lap is marked as valid. However, if all four wheels of the car are off the track—meaning it crosses the boundary on either side—the lap is considered invalid.
 
-# Data description:
+## Data description:
 
 This dataset contains 1272 rows, each representing a lap in the F1 racing simulator for the Albert Park race track, covering data from 2022,2023 and 2024. A unique identifier for each lap, lap_id was created by combining the session ID and lap number.
 
@@ -94,7 +94,7 @@ Additionally, the dataset includes features such as the distance to the left and
 | FINISHING_TIME_AT_600  |  The total time (in milliseconds) taken to complete 600 meters of the lap |
 | TRACK_VALID  |  Indicates whether the lap was classified as 'valid' or 'invalid' |
 
-# Usage:
+## Usage:
 
 This dataset is designed for future data modelling, to help racers optimise their performance by simulating various scenarios. Specifically, it can be used to find the optimal amount of steering, throttle, and brake during the critical first two turns of the race track to minimise overall lap time.  Since we have two different output variables, including _FINISHING_TIME_AT_600_ and _TRACK_VALID_, we can use several different models to analyse and understand the realationship between the responses and predictors. A simple analysis model that can be used to analyse data is the linear regression for the response variable, _FINISHING_TIME_AT_600_. 
 
@@ -260,7 +260,7 @@ _Support Info:_
 
 Contact Hoang Hung Le via email - z5426796@ad.unsw.edu.au
 
-# Contributors: 
+## Contributors: 
 
 Hoang Hung Le, Trishanti Karki, Mamun Khan, Zhaoxuan Liu and Honoka Kobayashi.  
 Dataset provided by Oracle
