@@ -1,8 +1,8 @@
 ﻿,,Honoka,Trisha,Mamun,Milo,Hoang
 Week 1,Proposed tasks (decide in week 1),Understand the variables/code,Get a good understanding of the datasets and how to use Github and plot the race track,Outline ReadMe draft and worshop product ideas,The preliminary understanding of the topic and the data,Work on data file and understand variable and check for all conditions of them
-,Progress (report in week 2),done,,done,done,finished
-Week 2,Proposed tasks (decide in week 2),Understand what data cleaning/manipulation has to be done,,Complete draft of ReadMe,Complete draft of ReadMe,Focusing on algorithms provided from the course and draft out the general steps to code
-,Progress (report in week 3),It's taking longer than expected,,Missing 2 sections,done,80% since some issues arised while figuring out the whole process
+,Progress (report in week 2),done,done,done,done,finished
+Week 2,Proposed tasks (decide in week 2),Understand what data cleaning/manipulation has to be done, Brainstorm ideas on what the key output and input variables of interest are and if we will create any new variables are and how the final data product will look. Focused on going through the useful algorithms document. Also significant focus on writing up the Draft README file and contributing to every section.,Complete draft of ReadMe,Complete draft of ReadMe,Focusing on algorithms provided from the course and draft out the general steps to code
+,Progress (report in week 3),It's taking longer than expected,Decent progress ,Missing 2 sections,done,80% since some issues arised while figuring out the whole process
 Week 3,Proposed tasks (decide in week 3),Finish up the draft ReadMe,,Finalise ReadMe draft,finish up the draft Readme file and summarised a algorithm file that can discover critical points ,Follow up and finish the draft ReadMe and contribute to the workflow and data description and draft out how the data frame looks like 
 ,Progress (report in week 4),done,,done,done,done
 Week 4,Proposed tasks (decide in week 4),Work on data interpolation for 2022/2023 dataset,,Provide support on data product direction and coding,trying to find critical points in different way to minimise error,Support team for coding part and produce the main loop to give out the final data product
