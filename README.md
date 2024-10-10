@@ -191,7 +191,7 @@ data = pd.read_csv('/Users/chris/Downloads/data-2/data_product_final_4.csv')
 # Prepare the predictor
 X = data.drop(columns = ['LAP_ID', 'TRACK_VALID', 'FINISHING_TIME_AT_600'])
 
-# Encode 'TRACK_VALID' (the response variable) as binary (0 for 'invalid', 1 for 'valid')
+# Encode 'TRACK_VALID' as binary (0 for 'invalid', 1 for 'valid')
 le = LabelEncoder()
 data['TRACK_VALID'] = le.fit_transform(data['TRACK_VALID'])
 
