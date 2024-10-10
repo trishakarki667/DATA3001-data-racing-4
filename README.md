@@ -50,35 +50,38 @@ Additional variables that were included in the 2024 are shown below along with t
 
 # Workflow:
 &nbsp;&nbsp;&nbsp;&nbsp;__1. Setting up our track of interest__ 
+
 &nbsp;&nbsp;&nbsp;&nbsp;The first step is to identify critical points within the lap, from the start of Turn 1, through Turn 2, to the finishing line. By plotting the first lap of the 2023 data, using the left and right side distances and corner coordinates, we identified five key points at 295m, 386m, 435m, 494m, 575m, and 600m (the new finishing line). These points are just before the boundary and apex of Turns 1 and 2, with 600m (a point between Turns 2 and 3). These points are crucial for modelling, as they capture significant insights like brake, throttle, steering and distances to the track edges. 
 
+&nbsp;&nbsp;&nbsp;&nbsp;__2. Combining 3 datasets__
 
+&nbsp;&nbsp;&nbsp;&nbsp;To ensure consistency and make the data easier to process, we first merged the 2022 and 2023 data files, as they shared the same variables and format. After merging, we kept only the variables necessary for modelling, which is described in the data description. Next, we integrated the 2024 data file, which had a different format and variable names. This required renaming and aligning the variables with those from the combined 2022 and 2023 dataset.
+
+&nbsp;&nbsp;&nbsp;&nbsp;__3. Initial data cleaning__
+
+&nbsp;&nbsp;&nbsp;&nbsp;Once the data was merged, we performed initial data cleaning after taking all the columns, and dropped NaN values. The criteria for identifying if it is NaN is if the value is missing for columns where that value must be shown in numerical type, or the value for variable not is numerical type, such as string value. We also checked for any inconsistencies in the throttle and brake values as it needs to be between 0.00 to 1.00
+
+&nbsp;&nbsp;&nbsp;&nbsp;__4. New lap ID variable__
+
+&nbsp;&nbsp;&nbsp;&nbsp;We created a new variable LAP_ID, by combining SESSION_ID and the LAP_NUMBER. Each unique LAP_ID represents an independent subset, ensuring that all data within each lap is treated as a separate observation in our data product.
+
+&nbsp;&nbsp;&nbsp;&nbsp;__5. Data interpolation__
+
+&nbsp;&nbsp;&nbsp;&nbsp;To determine the throttle, brake and steering values for the chosen five critical points, linear interpolation was used. Due to the format of data files in 2022 and 2023, we do not have exact data information for those critical points, which is the reason behind our decision to use linear interpolation, as we need the two closest points to find the values for those critical points.
+
+&nbsp;&nbsp;&nbsp;&nbsp;__6. Further Data cleaning__
+
+&nbsp;&nbsp;&nbsp;&nbsp;Since the lap distance at 600m is treated as a new finishing line, the finishing time at this point becomes a potential response variable. After producing the data, we’ll filter out any rows with NaN values for finishing time at 600m, though some NaN values for other variables will remain for modellers to handle later as these laps could still provide valuable information. The missing data for finishing time at 600m is due to insufficient data for interpolation, which requires two points (before and after the target point). For example, if the lap distance data goes up to 1000m but the critical point is at 600m, and there is no point close enough after 600m, interpolation becomes unreliable. This issue also affects other critical points with large gaps in lap distance. 
+
+&nbsp;&nbsp;&nbsp;&nbsp;__7. Is the lap valid?__
+
+&nbsp;&nbsp;&nbsp;&nbsp;We created a new variable, ‘TRACK_VALID’, which determines whether a lap is valid or invalid. A lap is considered valid if the car stays on track throughout. To check this, we first find the two nearest points on both the left and right edges of the track for each car position. Then, we calculate the distance from the car to both edges. If the car’s distance from either side is within the width of the track (plus a 1 metre buffer for the car’s width), the lap is marked as valid. However, if all four wheels of the car are off the track—meaning it crosses the boundary on either side—the lap is considered invalid.
 
 # Data description:
 
-The data product will be panel data structured as a comprehensive set of observations, each representing different variables impacting the car’s performance on the track sorted by the lap in which they were recorded. 
-The number of rows is dependent on the number of laps and represents the series of observations regarding key variables arranged by the session id and further sorted by the lap number. The session id represents the driver in the simulation, while the lap number represents the number of times the driver raced the track. The lap variable is classified as one that begins at the starting line, passes through turns 1 and 2 of the track and ends at a point between turns 2 and 3. Additionally, the lap number serves as a unique identifier for the recorded variables and enables a systematic analysis of how these variables impact lap time. 
-Moreover, the data frame will record observations regarding key features separated into columns. These features were selected on their ability to strongly influence lap time as well as be optimised to improve these times. These features include: 
-On-track: A new variable that determines whether the lap raced was valid 
-Braking Point: The optimal point at which a car brakes to improves lap times
-Turning Point: The optimal point at which a car turns to improve lap times
-Car Position: The coordinates of the car on the track which enables the driver to determine where they should be in order to improve lap times.
+This dataset contains 1272 rows, each representing a lap in the F1 racing simulator for the Albert Park race track, covering data from 2022,2023 and 2024. A unique identifier for each lap, lap_id was created by combining the session ID and lap number.
 
-# Project Status:
-
-With a draft of the ReadMe in place, the focus shifts to creating a data frame that satisfies the design stated. This involves a multistep process required for the creation of new variables such as track validity and structuring the data frame.
-
-_Progress:_ 
-
-We have conducted an in-depth review of the datasets, exploring the available variables and their relevance to the final data product 
-Key variables to include in the final data product have been identified, and we’ve agreed on the creation of a new variable ‘on-track?’
-Discussions on algorithms and methods to apply in the development of the data product have been conducted, with ideas such as using local averaging, projection of a point onto a line, and linear interpolation considered 
-
-_Next steps:_ 
-
-We need to ensure that the variables in the 2024 dataset are consistent with those in the 2022 and 2023 datasets for consistency and integration all three years will be used to create the data product 
-A decision needs to be made on whether to proceed with idea 1 or idea 2 regarding handling the variables for braking, turning point and throttle 
-
+The key variables of interest are: 
 
 # Usage:
 
