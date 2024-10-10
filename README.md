@@ -1,29 +1,52 @@
-## Project Title: F1 Data Frame Proposal
+## Project Title: F1 Data Product
 
 # Project Description:
 
 # Main Objective 
 
-The objective of this project is to create a comprehensive, data-driven framework using historical data obtained by Oracle via an F1 sim which encompasses the relevant variables that should be optimised in order to achieve an ideal lap. Specifically, the data frame produced will contain key variables that influence lap time during turns 1 and 2 on the race track. Through a process of leveraging algorithms to find optimal points for the variables including braking point, turning point and car position, the aim is to determine a course for the driver that maximises the exit speed from turn 2. Ultimately, by optimising the variables influencing this section of the race track, drivers can produce an ideal lap on the race track.
+To develop a comprehensive dataset using data collected in 2022, 2023 and 2024 from an F1 simulation by Oracle. This product will identify key variables that should be optimised to achieve an ideal lap time, specifically focusing on turns 1 and 2 on the race track.
 
 # Significance  
 
-F1 is becoming increasingly data-driven. Drivers and their teams use a vast array of data to understand relevant variables, predict outcomes and make informed decisions. This project holds importance in its ability to inform driver and team decisions on the lap and hence, maximise their ability to produce the fastest time possible. Data gathered on an assortment of variables that influence the time taken between the start and the first 2 turns of the track will enable drivers to reduce their times on the track by improving their approach to these vital factors which impact lap times such as throttle, brake, turning point and braking point. An understanding of these variables will enable strategic decision-making to fine tune driver performance.  Primarily, with this data frame, drivers can pinpoint and improve the variables that will allow them to generate an optimal lap.
+F1 racing is becoming increasingly data-centric, with teams relying on extensive data to make strategic decisions and improve their performance. This data product will serve as a foundation for further modelling by identifying crucial factors such as braking point, turning points, and car positioning to maximise exit speed from turn 2. By leveraging these insights, teams can make informed decisions, giving their drivers a competitive edge on the track.
 
 # Relation to  previous work 
 
-In F1, teams rely on collecting and analysing large volumes of data to develop an optimal race strategy. Over the past few years, Oracle Red Bull Racing has captured data using F1 simulations which contain relevant variables that need to be optimised to maximise performance. With this data, they have performed countless Monte Carlo simulations to inform strategic decisions that tackle the problem of producing an ideal lap. Moreover, drivers have used these F1 sims to translate data into improvements on the race track. For instance, Max Verstappen assesses his throttle, brake and steering inputs and evaluates strategy choices. 
-This project expands on the data collated by Oracle to produce a data framework with new, relevant variables including the optimal braking point, turning point and car position which will enable drivers to make more informed decisions on the track and hence, achieve improved lap times.
+In recent years, data analysis has become central to F1 racing, with teams leveraging Monte Carlo simulations and real-time data to improve their strategies for optimal performance. Previous efforts, particularly by teams like Oracle Red Bull Racing, have focused on collecting data related to variables such as speed, throttle, and steering inputs. Drivers like Max Verstappen use these advanced simulations to identify key factors that influence lap times and make adjustments accordingly. 
+ 
+This project builds on Oracle’s existing data by introducing new variables and manipulating data to ultimately create a data framework. By expanding the dataset in this way, we aim to provide drivers with more detailed insights to make better-informed decisions and ultimately improve lap times. 
 
 # Sources:
 
-The data sources used in the construction of this product are datasets provided by Oracle which contain data on variables recorded in an F1 simulation during the years 2022 to 2024. The data itself was produced using the EA F1 simulator, in which various drivers raced around the track and as they did, information on relevant variables was collected. These variables were included as factors that influenced lap time and included amongst others:
-A session identifier: A unique ID for each driver that raced in the simulation 
-Lap_Num: The current lap number
-Lap_Distance: The distance the vehicle has covered on the lap in metres
-Throttle: The amount of throttle applied
-Brake: The mount of brake applied
-World Position: Various metrics on the vehicle position in relation to the track
+The data sources used to construct the data product are datasets provided by Oracle which contain records of variables recorded in an F1 simulation during the years 2022 - 2024. The data itself was produced via the EA F1 simulator in which various drivers raced around the track while information on relevant variables was recorded. 
+
+The variables included in the 2022 and 2023 datasets will be used to construct data product are shown below.
+
+| Variable       | Description | 
+|:-----------:|:----:|
+| SESSION_IDENTIFIER   |  Unique identifier for the session | 
+| LAP_NUM |  Current lap number |
+| LAP_DISTANCE  |  Distance vehicle is around current lap in metre | 
+| CURRENT_LAP_TIME_MS  |  Current time around the lap in milliseconds |
+| THROTTLE  |  Amount of throttle applied (0.0 to 1.0) |
+| BRAKE  |  Amount of brake applied (0.0 to 1.0) |
+| STEERING  |  Steering (-1.0 (full lock left) to 1.0 (full lock right)) |
+| WORLDPOS X/Y  |  World space X/Y position |
+
+Additional variables that were included in the 2024 are shown below along with their corresponding variable names:
+
+| Variable       | Corresponding Variable | 
+|:-----------:|:----:|
+| SESSION_GUID   |  SESSION_IDENTIFIER | 
+| M_CURRENTLAPNUM |  LAP_NUM |
+| M_LAPDISTANCE_1  |  LAP_DISTANCE | 
+| M_CURRENTLAPTIMEINMS_1  |  CURRENT_LAP_TIME_MS |
+| M_THROTTLE_1  |  THROTTLE |
+| M_BRAKE_1  |  BRAKE |
+| M_STEER_1  |  STEERING |
+| M_WORLDPOSITIONX_1/Y_1  |  WORLDPOS X/Y |
+| STEERING  |  WORLDPOS X/Y |
+
 
 # Workflow:
 
