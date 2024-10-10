@@ -43,8 +43,6 @@ Additional variables that were included in the 2024 are shown below along with t
 | M_BRAKE_1  |  BRAKE |
 | M_STEER_1  |  STEERING |
 | M_WORLDPOSITIONX_1/Y_1  |  WORLDPOS X/Y |
-| STEERING  |  WORLDPOS X/Y |
-
 
 ## Workflow:
 __1. Setting up our track of interest__  
