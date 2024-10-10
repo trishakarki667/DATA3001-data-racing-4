@@ -49,7 +49,7 @@
 # Workflow:
 &nbsp;&nbsp;&nbsp;&nbsp;__1. Setting up our track of interest__  
 &nbsp;&nbsp;&nbsp;&nbsp;The first step is to identify critical points within the lap, from the start of Turn 1, through Turn 2, to the finishing line. By plotting the first lap of the 2023 data, using the left and right side distances and corner coordinates, we identified five key points at 295m, 386m, 435m, 494m, 575m, and 600m (the new finishing line). These points are just before the boundary and apex of Turns 1 and 2, with 600m (a point between Turns 2 and 3). These points are crucial for modelling, as they capture significant insights like brake, throttle, steering and distances to the track edges.  
-Below is the plot of critical points against the track path and turning points for better visualisation.  
+&nbsp;&nbsp;&nbsp;&nbsp;Below is the plot of critical points against the track path and turning points for better visualisation.  
 ![Plot of critical points against the track path and turn points](critical_points_plot.png)
 &nbsp;&nbsp;&nbsp;&nbsp;__2. Combining 3 datasets__  
 &nbsp;&nbsp;&nbsp;&nbsp;To ensure consistency and make the data easier to process, we first merged the 2022 and 2023 data files, as they shared the same variables and format. After merging, we kept only the variables necessary for modelling, which is described in the data description. Next, we integrated the 2024 data file, which had a different format and variable names. This required renaming and aligning the variables with those from the combined 2022 and 2023 dataset.
@@ -91,9 +91,37 @@ Below is the plot of critical points against the track path and turning points f
 | RIGHT_DISTANCE_AT_[distance]  |  Distance from the car to the right side of the track, calculated using interpolation, recorded at specific distances (i.e 295m, 386m, 435m, 494m, 575m) |
 | FINISHING_TIME_AT_600  |  The total time (in milliseconds) taken to complete 600 meters of the lap |
 | TRACK_VALID  |  Indicates whether the lap was classified as 'valid' or 'invalid' |
+
 # Usage:
 
-The data product is intended to be used for future data modelling to provide a racer numerous scenarios to account for different situations including finding the optimal position, throttle, and brake to minimise the lap time, specifically for the completion of the first 2 turns. A simple analysis model that can be used to analyse data is the linear regression. Other than that, there are several useful models that can be used to analyse the data, which include Ridge and Lasso regression, GAM, K-nearest neighbour. 
+&nbsp;&nbsp;&nbsp;&nbsp;This dataset is designed for future data modelling, to help racers optimise their performance by simulating various scenarios. Specifically, it can be used to find the optimal amount of steering, throttle, and brake during the critical first two turns of the race track to minimise overall lap time.  Since we have two different output variables, including _FINISHING_TIME_AT_600_ and _TRACK_VALID_, we can use several different models to analyse and understand the realationship between the responses and predictors. A simple analysis model that can be used to analyse data is the linear regression for the response variable, _FINISHING_TIME_AT_600_. 
+
+```python
+import pandas as pd
+import statsmodels.api as sm
+
+# Load the final data
+data = pd.read_csv('/Users/chris/Downloads/data-2/data_product_final_4.csv')
+
+# Prepare the predictors (exclude LAP_ID and TRACK_VALID)
+X = data.drop(columns=['LAP_ID', 'TRACK_VALID', 'FINISHING_TIME_AT_600'])
+
+# Define the response variable
+y = data['FINISHING_TIME_AT_600']
+
+# Drop NaN values from predictors and ensure y aligns
+X = X.dropna()
+y = y[X.index]
+
+# Add a constant to the model (intercept term)
+X = sm.add_constant(X)
+
+# Fit the linear regression model using statsmodels
+model = sm.OLS(y, X).fit()
+
+# Observe the summary of the model
+summary = model.summary()
+print(summary)
 
 _Support Info:_
 
