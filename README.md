@@ -103,8 +103,8 @@ import statsmodels.api as sm
 # Load the final data
 data = pd.read_csv('/Users/chris/Downloads/data-2/data_product_final_4.csv')
 
-# Prepare the predictors (exclude LAP_ID and TRACK_VALID)
-X = data.drop(columns=['LAP_ID', 'TRACK_VALID', 'FINISHING_TIME_AT_600'])
+# Prepare the predictor
+X = data.drop(columns = ['LAP_ID', 'TRACK_VALID', 'FINISHING_TIME_AT_600'])
 
 # Define the response variable
 y = data['FINISHING_TIME_AT_600']
@@ -116,7 +116,7 @@ y = y[X.index]
 # Add a constant to the model (intercept term)
 X = sm.add_constant(X)
 
-# Fit the linear regression model using statsmodels
+# Fit the linear regression model 
 model = sm.OLS(y, X).fit()
 
 # Observe the summary of the model
@@ -176,7 +176,83 @@ Notes:
 [2] The condition number is large, 1.32e+03. This might indicate that there are
 strong multicollinearity or other numerical problems.
 ```
+&nbsp;&nbsp;&nbsp;&nbsp;In terms of using _TRACK_VALID_ as a response variable, the logistic regression model is advised to use in this case
+```python
+import pandas as pd
+import statsmodels.api as sm
+from sklearn.preprocessing import LabelEncoder
 
+# Load the final data
+data = pd.read_csv('/Users/chris/Downloads/data-2/data_product_final_4.csv')
+
+# Prepare the predictor
+X = data.drop(columns = ['LAP_ID', 'TRACK_VALID', 'FINISHING_TIME_AT_600'])
+
+# Encode 'TRACK_VALID' (the response variable) as binary (0 for 'invalid', 1 for 'valid')
+le = LabelEncoder()
+data['TRACK_VALID'] = le.fit_transform(data['TRACK_VALID'])
+
+# Define the response variable
+y = data['TRACK_VALID']
+
+# Drop NaN values from predictors and ensure y aligns
+X = X.dropna()
+y = y[X.index]
+
+# Add a constant to the model (intercept term)
+X = sm.add_constant(X)
+
+# Fit the logistic regression model
+logit_model = sm.Logit(y, X).fit()
+
+# Observe the summary of the model
+summary = logit_model.summary()
+print(summary)
+```
+```markdown
+Optimization terminated successfully.
+         Current function value: 0.491175
+         Iterations 8
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:            TRACK_VALID   No. Observations:                 1248
+Model:                          Logit   Df Residuals:                     1222
+Method:                           MLE   Df Model:                           25
+Date:                Thu, 10 Oct 2024   Pseudo R-squ.:                  0.2902
+Time:                        18:52:14   Log-Likelihood:                -612.99
+converged:                       True   LL-Null:                       -863.60
+Covariance Type:            nonrobust   LLR p-value:                 4.272e-90
+=========================================================================================
+                            coef    std err          z      P>|z|      [0.025      0.975]
+-----------------------------------------------------------------------------------------
+const                     3.9171      0.853      4.594      0.000       2.246       5.588
+BRAKE_AT_295              0.1628      0.277      0.588      0.557      -0.380       0.706
+THROTTLE_AT_295           0.1983      0.463      0.429      0.668      -0.708       1.105
+STEERING_AT_295           0.5937      1.221      0.486      0.627      -1.799       2.987
+LEFT_DISTANCE_AT_295      0.0323      0.022      1.492      0.136      -0.010       0.075
+RIGHT_DISTANCE_AT_295     0.0687      0.028      2.471      0.013       0.014       0.123
+BRAKE_AT_386             -1.0871      0.322     -3.381      0.001      -1.717      -0.457
+THROTTLE_AT_386          -0.3459      0.275     -1.259      0.208      -0.884       0.192
+STEERING_AT_386          -1.2089      0.360     -3.362      0.001      -1.914      -0.504
+LEFT_DISTANCE_AT_386     -0.1143      0.031     -3.741      0.000      -0.174      -0.054
+RIGHT_DISTANCE_AT_386    -0.0761      0.029     -2.660      0.008      -0.132      -0.020
+BRAKE_AT_435              0.8557      0.989      0.865      0.387      -1.083       2.794
+THROTTLE_AT_435           1.2135      0.315      3.854      0.000       0.596       1.831
+STEERING_AT_435           0.9452      0.492      1.923      0.055      -0.018       1.909
+LEFT_DISTANCE_AT_435     -0.0780      0.037     -2.120      0.034      -0.150      -0.006
+RIGHT_DISTANCE_AT_435    -0.3220      0.035     -9.090      0.000      -0.391      -0.253
+BRAKE_AT_494              1.6454      1.335      1.232      0.218      -0.972       4.263
+THROTTLE_AT_494           1.2436      0.397      3.136      0.002       0.466       2.021
+STEERING_AT_494           1.2041      0.585      2.058      0.040       0.058       2.351
+LEFT_DISTANCE_AT_494      0.1616      0.029      5.542      0.000       0.104       0.219
+RIGHT_DISTANCE_AT_494     0.0497      0.029      1.733      0.083      -0.007       0.106
+BRAKE_AT_575              0.0854      3.296      0.026      0.979      -6.374       6.545
+THROTTLE_AT_575           0.2790      0.417      0.669      0.503      -0.538       1.096
+STEERING_AT_575           0.2591      0.647      0.401      0.689      -1.009       1.527
+LEFT_DISTANCE_AT_575     -0.0332      0.040     -0.837      0.403      -0.111       0.045
+RIGHT_DISTANCE_AT_575    -0.0275      0.034     -0.819      0.413      -0.093       0.038
+=========================================================================================
+```
 _Support Info:_
 
 Contact Mamun Khan via email - z5361508@ad.unsw.edu.au
