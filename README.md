@@ -12,8 +12,7 @@
 
 # Relation to  previous work 
 
-&nbsp;&nbsp;&nbsp;&nbsp;In recent years, data analysis has become central to F1 racing, with teams leveraging Monte Carlo simulations and real-time data to improve their strategies for optimal performance. Previous efforts, particularly by teams like Oracle Red Bull Racing, have focused on collecting data related to variables such as speed, throttle, and steering inputs. Drivers like Max Verstappen use these advanced simulations to identify key factors that influence lap times and make adjustments accordingly. 
- 
+&nbsp;&nbsp;&nbsp;&nbsp;In recent years, data analysis has become central to F1 racing, with teams leveraging Monte Carlo simulations and real-time data to improve their strategies for optimal performance. Previous efforts, particularly by teams like Oracle Red Bull Racing, have focused on collecting data related to variables such as speed, throttle, and steering inputs. Drivers like Max Verstappen use these advanced simulations to identify key factors that influence lap times and make adjustments accordingly.  
 &nbsp;&nbsp;&nbsp;&nbsp;This project builds on Oracle’s existing data by introducing new variables and manipulating data to ultimately create a data framework. By expanding the dataset in this way, we aim to provide drivers with more detailed insights to make better-informed decisions and ultimately improve lap times. 
 
 # Sources:
@@ -82,6 +81,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;This dataset contains 1272 rows, each representing a lap in the F1 racing simulator for the Albert Park race track, covering data from 2022,2023 and 2024. A unique identifier for each lap, lap_id was created by combining the session ID and lap number.
 
 &nbsp;&nbsp;&nbsp;&nbsp;The key variables of interest are: 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Output Variables:
 
 | Variable       | Description | 
 |:-----------|:----|
